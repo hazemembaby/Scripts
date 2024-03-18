@@ -1,6 +1,6 @@
 # ValidateEXOMePf
 
-Download the latest release: [ValidateEXOMePf.ps1](https://github.com/hazemembaby/Scripts/ValidateEXOMePf.ps1)
+Download the latest release: [ValidateEXOMePf.ps1](https://github.com/hazemembaby/Scripts/Public Folders/ValidateEXOMePf/ValidateEXOMePf.ps1)
 
 This script investigates public folders/items creation operations (aka. send mail) failures & propose FIXes for mitigation.
 The script is working to validate the below conditions over the affected public folder
