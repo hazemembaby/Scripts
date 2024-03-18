@@ -52,11 +52,11 @@ Typically, the script should run with PublicFolder identity parameter as illustr
 
 The script will prompt for affected public folder identity/EntryID if it wasn't provided using PublicFolder parameter then it will prompt for global administrator username & password to connect to Exchange online PowerShell, by default it validates if the issue is specific to the Mail public folder "e.g. all users are affected"
 
-![Picture of script intro](Picture1.jpg)
+![Picture of script intro](Img/Picture1.jpg)
 
 If the issue happens only with a specific user on that case an affected user smtp address is required to be provided
 
-![Picture of user specific issue type](Picture3.jpg)
+![Picture of user specific issue type](Img/Picture3.jpg)
 
 In this example output, the script calls out three blockers.
 
@@ -65,7 +65,7 @@ It points out the below blockers:
    - DirectoryBasedEdgeBlockMode is activated on the tenant
    - Anonymous user has either no sufficient/existing permissions on Public folder
 
-![Picture of example](Picture2.jpg)
+![Picture of example](Img/Picture2.jpg)
 
 In this example output, the script calls out two blockers.
 
@@ -73,7 +73,7 @@ It points out the below issues:
    - User permissions sync problems over EffectivePublicFolderMailbox
    - Public folder size has exceeded Organization DefaultPublicFolderProhibitPostQuota value
 
-![Picture of example](Picture4.jpg)
+![Picture of example](Img/Picture4.jpg)
 
 
 
