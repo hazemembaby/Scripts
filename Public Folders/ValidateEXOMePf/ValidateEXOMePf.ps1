@@ -109,11 +109,12 @@ function ValidateMePfMbx {
     param([String]$PublicFolderMbxGuid)
 
     try {
-        $PfMbx=Get-mailbox -PublicFolder $PublicFolderMbxGuid -ErrorAction stop
+        $PfMbx=Get-Mailbox -PublicFolder $PublicFolderMbxGuid -ErrorAction stop
         return $PfMbx
     } catch {
         $DistinguishedName=(Get-Mailbox -PublicFolder -ResultSize unlimited -SoftDeletedMailbox $PublicFolderMbxGuid -ErrorAction SilentlyContinue).DistinguishedName
         if ($null -ne $DistinguishedName -and $DistinguishedName.contains("OU=Soft Deleted Objects")) {
+            #add aka.ms
             $Fix= "FIX -->Please follow the following article https://learn.microsoft.com/en-us/exchange/collaboration-exo/public-folders/recover-deleted-public-folder-mailbox
             to validate if the content public folder mailbox:$PublicFolderMbxGuid was soft-deleted then restore it back"
             $Issue="Public folder content mailbox $PublicFolderMbxGuid is soft deleted which is a blocker for receiving emails over the mail public folder"
@@ -139,7 +140,8 @@ function CheckMePfHealth {
     try {
         $LegacyExchangeDN=$MailPublicFolder.LegacyExchangeDN
         $count=$LegacyExchangeDN.split("=").count
-        $PublicFolder=Get-PublicFolder $LegacyExchangeDN.split("=")[$count-1] -ErrorAction stop
+        $MPublicFolder=$LegacyExchangeDN.split("=")[$count-1]
+        [PSCustomObject]$PublicFolder=Get-PublicFolder $MPublicFolder -ErrorAction stop
         if ($PublicFolder.MailEnabled -eq $true) {
             $HasValue=$PublicFolder.MailRecipientGuid.Guid
             if ($null -eq $HasValue -or $HasValue -eq "00000000-0000-0000-0000-000000000000") {
@@ -204,9 +206,10 @@ function GetPublicFolderInfo {
     try {
         $MailPublicFolder=Get-MailPublicFolder $PublicFolder -ErrorAction stop
         Write-Host "Retrieving PublicFolder $($MailPublicFolder.Identity) information for diagnosing!,please wait as this might take awhile...." -ForegroundColor Yellow
-        $PublicFolder=CheckMePfHealth($MailPublicFolder)
+        [PSCustomObject]$PublicFolder=CheckMePfHealth($MailPublicFolder)
         $PublicFolderStats=Get-PublicFolderStatistics $PublicFolder.EntryId -ErrorAction stop
-        $PfMbx=ValidateMePfMbx($($PublicFolder.ContentMailboxGuid.Guid))
+        $PublicFolderMbxGuid=$PublicFolder.ContentMailboxGuid.Guid
+        $PfMbx=ValidateMePfMbx($PublicFolderMbxGuid)
         $PfMbxStats=Get-mailboxStatistics $PublicFolder.ContentMailboxGuid.Guid -ErrorAction stop
         $OrganizationConfig =Get-OrganizationConfig -ErrorAction stop
         [Int64]$DefaultPublicFolderProhibitPostQuota=[Int64]$OrganizationConfig.DefaultPublicFolderProhibitPostQuota.Split("(")[1].split(" ")[0].Replace(",", "")
@@ -285,6 +288,7 @@ function ValidateContentMBXQuota {
     [Int64]$PfMbxStatsInB=[Int64]$PublicFolderInfo.PfMbxStats.TotalItemSize.Value.ToString().Split("(")[1].split(" ")[0].Replace(",", "")
     if ($PfMbxStatsInB -ge $PfMbxProhibitSendReceiveQuotaInB) {
         if ($PfMbxProhibitSendReceiveQuotaInB -ge 107374182400 ) {
+            #add aka.ms
             $article="https://techcommunity.microsoft.com/t5/exchange-team-blog/how-exchange-online-automatically-cares-for-your-public-folder/ba-p/2050019"
             $Fix="FIX --> To resolve a scenario where content public folder mailbox has reached its $PfMbxProhibitSendReceiveQuotaInGB quota value either check,
             1.If you have Giant public folders over that content mailbox
@@ -342,6 +346,7 @@ function ValidateDbEbDomain {
         $HostedConnectionFilterPolicy=Get-HostedConnectionFilterPolicy -ErrorAction stop | Where-Object { $_.IsDefault -eq "True" }
         $DirectoryBasedEdgeBlockModeStatus=$HostedConnectionFilterPolicy.DirectoryBasedEdgeBlockMode
         if ($DirectoryBasedEdgeBlockModeStatus -eq "Default") {
+            #add aka.ms
             $article="https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/use-directory-based-edge-blocking"
             $Fix="FIX --> Please file a support case for microsoft to disable DbEb on the whole tenant(Recommended) else please ensure that MePf smtp domain $MailPublicFolderDomain DomainType is set to InternalRelay,for more information please check the following article $article"
             $Issue="DirectoryBasedEdgeBlockMode is activated on the tenant"
