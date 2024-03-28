@@ -479,7 +479,7 @@ function ValidateMePfPermSync {
 Write-Host $Description -ForegroundColor Cyan
 $Description | Out-File $Script:Path\$Script:ReportName -Append
 #Connect to EXO PS
-$SessionCheck = Get-PSSession | Where-Object { $_.Name -like "*ExchangeOnline*" -and $_.State -match "opened" }
+$SessionCheck = Get-ConnectionInformation | Where-Object { $_.Name -like "*ExchangeOnline*" -and $_.State -match "Connected" }
 if ($null -eq $SessionCheck) {
     Connect2EXO
 }
