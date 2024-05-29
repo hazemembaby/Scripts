@@ -289,7 +289,7 @@ function ValidateContentMBXQuota {
     if ($PfMbxStatsInB -ge $PfMbxProhibitSendReceiveQuotaInB) {
         if ($PfMbxProhibitSendReceiveQuotaInB -ge 107374182400 ) {
             #add aka.ms
-            $article="https://techcommunity.microsoft.com/t5/exchange-team-blog/how-exchange-online-automatically-cares-for-your-public-folder/ba-p/2050019"
+            $article="https://aka.ms/PfAutosplit"
             $Fix="FIX --> To resolve a scenario where content public folder mailbox has reached its $PfMbxProhibitSendReceiveQuotaInGB quota value either check,
             1.If you have Giant public folders over that content mailbox
             2.If MovedItemRetention is keeping the mailbox full while AutoSplit occurred successfully
@@ -338,22 +338,6 @@ function ValidateMePfQuota {
         }
     }
 }
-function ValidateDbEbDomain {
-    param([PSCustomObject]$PublicFolderInfo)
-    $MailPublicFolderDomain=$PublicFolderInfo.MailPublicFolder.PrimarySmtpAddress.split("@")[1]
-    $AcceptedDomainType=(Get-AcceptedDomain -Identity $MailPublicFolderDomain -ErrorAction stop).DomainType
-    if ($AcceptedDomainType -eq "Authoritative") {
-        $HostedConnectionFilterPolicy=Get-HostedConnectionFilterPolicy -ErrorAction stop | Where-Object { $_.IsDefault -eq "True" }
-        $DirectoryBasedEdgeBlockModeStatus=$HostedConnectionFilterPolicy.DirectoryBasedEdgeBlockMode
-        if ($DirectoryBasedEdgeBlockModeStatus -eq "Default") {
-            #add aka.ms
-            $article="https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/use-directory-based-edge-blocking"
-            $Fix="FIX --> Please file a support case for microsoft to disable DbEb on the whole tenant(Recommended) else please ensure that MePf smtp domain $MailPublicFolderDomain DomainType is set to InternalRelay,for more information please check the following article $article"
-            $Issue="DirectoryBasedEdgeBlockMode is activated on the tenant"
-            WriteToScreenAndLog -Issue $Issue -Fix $Fix
-        }
-    }
-}
 function GetUserPermissions {
     param([PSCustomObject]$Perms)
     $WorkingPermissions=@("CreateItems", "Author", "Contributor", "Editor", "Owner", "PublishingAuthor",
@@ -377,7 +361,7 @@ function ValidateMePfExtRec {
     $Result=GetUserPermissions($AnonymousPermsUser)
     if ($Result -eq $false) {
         $Fix= "FIX --> Please follow the following article https://aka.ms/addPFperm to grant Anonymous user the least sufficient permission e.g.CreateItems over the requested public folder"
-        $Issue="Anonymous user has either no sufficient/existing permissions on Public folder $($PublicFolderInfo.PublicFolder.Identity)"
+        $Issue="The following check is validated if it's required to receive emails from unauthenticated users 'e.g. user@gmail.com'`nAnonymous user has either no sufficient/existing permissions on Public folder $($PublicFolderInfo.PublicFolder.Identity)"
         WriteToScreenAndLog -Issue $Issue -Fix $Fix
     }
 }
@@ -495,7 +479,6 @@ ValidateMePfAddress($PublicFolderInfo)
 ValidateContentMBXQuota($PublicFolderInfo)
 ValidateMePfQuota($PublicFolderInfo)
 if ($IgnoreExternal -ne "Enabled") {
-    ValidateDbEbDomain($PublicFolderInfo)
     ValidateMePfExtRec($PublicFolderInfo)
 }
 AskForFeedback
