@@ -17,9 +17,8 @@ Checks run:
     - MePf GUID
 4.	Content Public folder mailbox across the public folder & its dumpster is different
 5.	EntryId & DumpsterEntryID values are not mapped properly on the public folder & its dumpster
-6.	Directory based edge blocking status
-7.	Routing address “mail.onmicrosoft.com” existence in case of on-premises PFs
-8.  Mail-enabled public folder health if MEPfProxyGuid was null
+6.	Routing address “mail.onmicrosoft.com” existence in case of on-premises PFs
+7.  Mail-enabled public folder health if MEPfProxyGuid was null
 
 ## Syntax
 
