@@ -17,9 +17,8 @@ Checks run:
     - MePf GUID
 4.	Content Public folder mailbox across the public folder & its dumpster is different
 5.	EntryId & DumpsterEntryID values are not mapped properly on the public folder & its dumpster
-6.	Directory based edge blocking status
-7.	Routing address “mail.onmicrosoft.com” existence in case of on-premises PFs
-8.  Mail-enabled public folder health if MEPfProxyGuid was null
+6.	Routing address “mail.onmicrosoft.com” existence in case of on-premises PFs
+7.  Mail-enabled public folder health if MEPfProxyGuid was null
 
 ## Syntax
 
@@ -52,7 +51,7 @@ The script will prompt for affected public folder identity/EntryID if it wasn't 
 
 ![Picture of script intro](Img/Picture1.jpg)
 
-If the issue happens only with a specific user on that case an affected user smtp address is required to be provided
+If the issue happens only with an internal specific user on that case an affected user smtp address is required to be provided "e.g. user@contoso.com" else it happened with an external user "e.g user@gmail.com" please skip using the AffectedUser parameter to allow the script to validate Anonymous user permissions over the affected folder
 
 ![Picture of user specific issue type](Img/Picture3.jpg)
 
