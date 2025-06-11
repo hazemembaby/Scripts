@@ -1,4 +1,4 @@
-# ValidateEXOMePf
+# CheckEXOMePf
 
 This script investigates public folders/items creation operations (aka. send mail) failures & propose FIXes for mitigation.
 The script is working to validate the below conditions over the affected public folder
@@ -23,7 +23,7 @@ Checks run:
 ## Syntax
 
 ```powershell
-ValidateEXOMePf.ps1
+CheckEXOMePf.ps1
   [-PublicFolder <string[]>]
   [-AffectedUser <string[]>]
   [-ExportPath <string[]>]
@@ -31,20 +31,20 @@ ValidateEXOMePf.ps1
 
 ## Output
 
-The script will generate the public folder validation checks failures & proposed Fixes results on screen and will generate same results on ValidateMePfREPORT.txt file as well.
+The script will generate the public folder validation checks failures & proposed Fixes results on screen and will generate same results on CheckMePfREPORT.txt file as well.
 There are other files generated for either script logging purposes.
 
 File Name|Content|Use
 -|-|-
-ValidateMePfREPORT.txt|Information about any blockers found|The script will display what it found, and in many cases it will provide a mitigation to fix the problem
-ValidateMePfREPORTChecksLogging.csv|Information about the reason of script failure to run|The file will display errors encountered on running the script and at which stage
+CheckMePfREPORT.txt|Information about any blockers found|The script will display what it found, and in many cases it will provide a mitigation to fix the problem
+CheckMePfREPORTChecksLogging.csv|Information about the reason of script failure to run|The file will display errors encountered on running the script and at which stage
 
 ## Usage
 
 Typically, the script should run with PublicFolder identity parameter as illustrated below:
 
 ```powershell
-.\ValidateEXOMePf.ps1 -PublicFolder \pf1
+.\CheckEXOMePf.ps1 -PublicFolder \pf1
 ```
 
 The script will prompt for affected public folder identity/EntryID if it wasn't provided using PublicFolder parameter then it will prompt for global administrator username & password to connect to Exchange online PowerShell, by default it validates if the issue is specific to the Mail public folder "e.g. all users are affected"
