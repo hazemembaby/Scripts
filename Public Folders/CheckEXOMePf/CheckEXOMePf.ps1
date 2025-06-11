@@ -14,12 +14,12 @@ param(
     [Parameter(Mandatory = $false)]
     [String]$AffectedUser)
 
-$Script:ReportName = "ValidateMePfREPORT.txt"
+$Script:ReportName = "CheckMePfREPORT.txt"
 $ts = Get-Date -Format yyyyMMdd_HHmmss
-$Script:Path = $ExportPath +"\ValidateEXOMePf\ValidateEXOMePf_$ts"
+$Script:Path = $ExportPath +"\CheckEXOMePf\CheckEXOMePf_$ts"
 New-Item $Script:Path -Force -ItemType Directory | Out-Null
-New-Item $Script:Path\ValidateMePfREPORT.txt -Force -ItemType File | Out-Null
-New-Item $Script:Path\ValidateMePfREPORTChecksLogging.csv -Force -ItemType File | Out-Null
+New-Item $Script:Path\CheckMePfREPORT.txt -Force -ItemType File | Out-Null
+New-Item $Script:Path\CheckMePfREPORTChecksLogging.csv -Force -ItemType File | Out-Null
 
 #Requires -Modules @{ModuleName="ExchangeOnlineManagement"; ModuleVersion="3.0.0" }
 function LogError {
@@ -38,7 +38,7 @@ function LogError {
         Function    = $Function
         Description = $CurrentDescription
         Status      = $CurrentStatus
-    } | Export-Csv $Script:Path\ValidateMePfREPORTChecksLogging.csv -NoTypeInformation -Append
+    } | Export-Csv $Script:Path\CheckMePfREPORTChecksLogging.csv -NoTypeInformation -Append
 }
 
 function WriteToScreenAndLog {
